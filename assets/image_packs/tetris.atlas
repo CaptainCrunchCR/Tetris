@@ -1,0 +1,62 @@
+
+tetris.png
+size: 512, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Gameboard
+  rotate: false
+  xy: 2, 96
+  size: 470, 920
+  orig: 470, 920
+  offset: 0, 0
+  index: -1
+IShape
+  rotate: false
+  xy: 2, 49
+  size: 45, 45
+  orig: 45, 45
+  offset: 0, 0
+  index: -1
+JShape
+  rotate: false
+  xy: 2, 2
+  size: 45, 45
+  orig: 45, 45
+  offset: 0, 0
+  index: -1
+LShape
+  rotate: false
+  xy: 49, 49
+  size: 45, 45
+  orig: 45, 45
+  offset: 0, 0
+  index: -1
+OShape
+  rotate: false
+  xy: 49, 2
+  size: 45, 45
+  orig: 45, 45
+  offset: 0, 0
+  index: -1
+SShape
+  rotate: false
+  xy: 96, 49
+  size: 45, 45
+  orig: 45, 45
+  offset: 0, 0
+  index: -1
+TShape
+  rotate: false
+  xy: 96, 2
+  size: 45, 45
+  orig: 45, 45
+  offset: 0, 0
+  index: -1
+ZShape
+  rotate: false
+  xy: 143, 49
+  size: 45, 45
+  orig: 45, 45
+  offset: 0, 0
+  index: -1
