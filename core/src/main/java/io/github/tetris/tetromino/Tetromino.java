@@ -25,6 +25,7 @@ public class Tetromino implements ITetromino {
         Arrays.setAll(this.logicalPositions, definition -> new Vector2());
         this.definitions = this.tetrominoMathCalculator.calculateInitialDefinitions(shape);
         this.logicalPositions = this.tetrominoMathCalculator.calculateLogicalPositions(this.anchorLogicalPosition, this.definitions);
+        this.orientation = TetrominoOrientation.ZERO;
     }
 
     public Tetromino(TetrominoShape shape) {
@@ -36,7 +37,8 @@ public class Tetromino implements ITetromino {
         Arrays.setAll(this.definitions, definition -> new Vector2());
         Arrays.setAll(this.logicalPositions, definition -> new Vector2());
         this.definitions = this.tetrominoMathCalculator.calculateInitialDefinitions(shape);
-
+        this.logicalPositions = this.tetrominoMathCalculator.calculateLogicalPositions(this.anchorLogicalPosition, this.definitions);
+        this.orientation = TetrominoOrientation.ZERO;
     }
 
     @Override
@@ -104,6 +106,12 @@ public class Tetromino implements ITetromino {
     @Override
     public void rotateClockWise() {
         this.definitions = tetrominoMathCalculator.calculateClockWiseRotation(this.definitions);
+        this.calculateLogicalPositions();
+    }
+
+    @Override
+    public void rotateCounterClockWise() {
+        this.definitions = tetrominoMathCalculator.calculateCounterClockWiseRotation(this.definitions);
         this.calculateLogicalPositions();
     }
 }

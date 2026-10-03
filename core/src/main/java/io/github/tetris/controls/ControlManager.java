@@ -53,6 +53,11 @@ public class ControlManager {
                 moveClockWise();
             }
         }
+        if(Gdx.input.isKeyJustPressed(COUNTER_CLOCKWISE_ROTATION_KEY)){
+            if(this.gameArbiter.isTetrominoAllowedToPerformAction(ActionIntent.ROTATE_COUNTER_CLOCKWISE)) {
+                moveCounterClockWise();
+            }
+        }
         this.tetrominoRenderer.updateTetrominoShape();
     }
 
@@ -74,6 +79,9 @@ public class ControlManager {
         this.tetrominoHolder.getValue().rotateClockWise();
     }
 
+    private void moveCounterClockWise(){
+        this.tetrominoHolder.getValue().rotateCounterClockWise();
+    }
     public void render(float deltaTime){
         this.handleInputs();
     }

@@ -8,10 +8,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import io.github.tetris.manager.GameManager;
 
-public class GameScreen implements Screen {
+public class PlaySessionScreen implements Screen {
     private final GameManager tetris;
     private final Texture backgroundTexture;
-    public GameScreen(GameManager tetris){
+    public PlaySessionScreen(GameManager tetris){
         this.tetris = tetris;
         this.backgroundTexture = new Texture(Gdx.files.internal("game_background.png"));
     }

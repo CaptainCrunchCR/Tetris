@@ -82,4 +82,17 @@ public class TetrominoMathCalculator implements ITetrominoMathCalculator {
         }
         return definitions;
     }
+
+    @Override
+    public Vector2[] calculateCounterClockWiseRotation(Vector2[] definitions) {
+        for (Vector2 definition : definitions) {
+            int newDefinitionX = Math.negateExact((int) definition.y);
+            int newDefinitionY = (int) definition.x;
+            definition.x = newDefinitionX;
+            definition.y = newDefinitionY;
+        }
+        return definitions;
+    }
+
+
 }

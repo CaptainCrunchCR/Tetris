@@ -12,35 +12,16 @@ import io.github.tetris.processors.TetrominoMathCalculator;
 import io.github.tetris.tetromino.ITetromino;
 
 public class GameArbiter {
-    private final ArrayList<IClearedLinesSubscriber> clearedLinesSubscribers;
     private final Holder<ITetromino> tetrominoHolder;
     private final Gameboard gameboard;
     private final ITetrominoMathCalculator projector;
-    private GameState gameState;
 
     public GameArbiter(Gameboard gameboard, Holder<ITetromino> tetrominoHolder){
         this.gameboard = gameboard;
         this.tetrominoHolder = tetrominoHolder;
-        this.clearedLinesSubscribers = new ArrayList<>();
-        this.gameState = GameState.NOT_PLAYING;
         this.projector = new TetrominoMathCalculator();
     }
 
-    public void updateGameState(GameState gameState){
-        this.gameState = gameState;
-    }
-
-    public void subscribeClearedLinesSubscriber(IClearedLinesSubscriber subscriber){
-        this.clearedLinesSubscribers.add(subscriber);
-    }
-
-    public void unsubscribeClearedLinesSubscriber(IClearedLinesSubscriber subscriber){
-        this.clearedLinesSubscribers.remove(subscriber);
-    }
-
-    private void notifyClearedLinesSubscribers(){
-        this.clearedLinesSubscribers.forEach(IClearedLinesSubscriber::onClearedLines);
-    }
 
     public boolean isTetrominoAllowedToPerformAction(ActionIntent actionIntent){
         Vector2[] tetrominoPiecePositions = this.tetrominoHolder.getValue().getLogicalPositions();
@@ -52,7 +33,7 @@ public class GameArbiter {
             switch (actionIntent) {
                 case ROTATE_COUNTER_CLOCKWISE:
                 case ROTATE_CLOCKWISE:
-                    isWallCollisionDetected = piecePosition.x == 0 || piecePosition.x == this.gameboard.getTotalXCoordinates();
+                    isWallCollisionDetected = piecePosition.x == 0 || piecePosition.x == this.gameboard.getTotalXCoordinates() || piecePosition.y <= 4;
                     break;
                 case MOVE_LEFT:
                     isWallCollisionDetected = piecePosition.x - 1 < 0;

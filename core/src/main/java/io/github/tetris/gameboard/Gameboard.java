@@ -50,7 +50,7 @@ public class Gameboard {
         this.state = GameboardState.EMPTY;
         this.tetrominoHolder = tetrominoHolder;
         this.completedRows = new ArrayList<>();
-        this.resetCompletedLines();
+        this.resetCompletedRows();
         this.initGameboard();
     }
 
@@ -63,16 +63,40 @@ public class Gameboard {
         }
     }
 
-    public void updateLayout(){
+    public void updateGameboard(){
         this.commitTetromino();
         this.calculateCompletedRows();
         if(!this.completedRows.isEmpty()) {
             this.shiftRowsDown();
         }
-        this.resetCompletedLines();
+        this.resetCompletedRows();
+        this.updateLayoutState();
     }
 
-    private void resetCompletedLines(){
+    private void updateLayoutState(){
+        int occupiedRows = 0;
+        for (Cell[] cells : this.layout) {
+            boolean isRowOccupied = false;
+            for (Cell cell : cells) {
+                if (cell.getContent().isPresent()) {
+                    isRowOccupied = true;
+                    break;
+                }
+            }
+            if (isRowOccupied) {
+                occupiedRows++;
+            }
+        }
+
+        if(occupiedRows == this.TOTAL_ROWS){
+            this.state = GameboardState.FULL;
+        }else if(occupiedRows == 0){
+            this.state = GameboardState.EMPTY;
+        }else{
+            this.state = GameboardState.PARTIALLY_FULL;
+        }
+    }
+    private void resetCompletedRows(){
         this.completedRows.clear();
     }
 

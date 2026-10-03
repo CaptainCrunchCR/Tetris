@@ -13,21 +13,21 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import io.github.tetris.arbiter.GameArbiter;
 import io.github.tetris.arbiter.GameState;
-import io.github.tetris.arbiter.IClearedLinesSubscriber;
 import io.github.tetris.controls.ControlManager;
 import io.github.tetris.controls.ActionIntent;
 import io.github.tetris.gameboard.Gameboard;
 import io.github.tetris.helpers.Holder;
 import io.github.tetris.renderers.GameboardRenderer;
 import io.github.tetris.renderers.TetrominoRenderer;
-import io.github.tetris.screens.GameScreen;
+import io.github.tetris.screens.GameMenuScreen;
+import io.github.tetris.screens.PlaySessionScreen;
 import io.github.tetris.tetromino.ITetromino;
 import io.github.tetris.tetromino.Tetromino;
 import io.github.tetris.tetromino.TetrominoShape;
 import io.github.tetris.wrappers.AssetIdentifier;
 import io.github.tetris.wrappers.TetrisRenderAssets;
 
-public class GameManager extends Game implements IClearedLinesSubscriber {
+public class GameManager extends Game {
     /***
      * Gravity determines the fall speed of tetrominoes.
      * This property is going to cause impact on render multiplying its value by delta time.
@@ -45,14 +45,12 @@ public class GameManager extends Game implements IClearedLinesSubscriber {
     public final float WORLD_HEIGHT;
     public FitViewport viewport;
     public OrthographicCamera camera;
-    public BitmapFont mainFont;
     public SpriteBatch batch;
     public Music easyLevelThemeMusic;
     public Music hardLevelThemeMusic;
     public AssetManager assetManager;
     public final TetrisRenderAssets tetrisRenderAssets;
     private GameState gameState;
-
 
     public GameManager (){
         gravity = 1f;
@@ -62,15 +60,12 @@ public class GameManager extends Game implements IClearedLinesSubscriber {
         this.tetrominoHolder = new Holder<>(null);
         this.gameboard = new Gameboard(this.tetrominoHolder);
         this.gameArbiter = new GameArbiter(this.gameboard, this.tetrominoHolder);
-        this.gameArbiter.subscribeClearedLinesSubscriber(this);
         this.tetrisRenderAssets = new TetrisRenderAssets();
         this.gameState = GameState.NOT_PLAYING;
-        startGame();
     }
 
-    private void startGame(){
+    public void startGame(){
         this.gameState = GameState.STARTING_GAME;
-        this.gameArbiter.updateGameState(this.gameState);
         manageGameSession();
     }
 
@@ -90,6 +85,7 @@ public class GameManager extends Game implements IClearedLinesSubscriber {
     }
     private void buildNewTetromino(){
         TetrominoShape randomShape = this.selectRandomTetrominoShape();
+        this.spawnNewTetromino(randomShape);
         this.spawnNewTetromino(randomShape);
         Vector2 tetrominoAnchorSpawnPosition = this.selectTetrominoAnchorSpawnPosition(randomShape);
         this.tetrominoHolder.getValue().setAnchorLogicalPosition((int) tetrominoAnchorSpawnPosition.x, (int) tetrominoAnchorSpawnPosition.y);
@@ -132,7 +128,7 @@ public class GameManager extends Game implements IClearedLinesSubscriber {
     }
 
     private void lockTetromino(){
-        this.gameboard.updateLayout();
+        this.gameboard.updateGameboard();
         this.tetrominoHolder.setValue(null);
         this.buildNewTetromino();
     }
@@ -140,6 +136,14 @@ public class GameManager extends Game implements IClearedLinesSubscriber {
     @Override
     public void create() {
         this.assetManager = new AssetManager();
+        /*
+         * Load and setup game UI interface
+         */
+        this.assetManager.load("skin/glassy-ui.atlas", TextureAtlas.class);
+        this.assetManager.finishLoading();
+        /*
+         * Load and setup game session render assets
+         */
         this.assetManager.load("image_packs/tetris.atlas", TextureAtlas.class);
         this.assetManager.finishLoading();
 
@@ -161,7 +165,7 @@ public class GameManager extends Game implements IClearedLinesSubscriber {
          */
         this.easyLevelThemeMusic.setLooping(true);
         this.easyLevelThemeMusic.setVolume(1.5f);
-        this.easyLevelThemeMusic.play();
+//        this.easyLevelThemeMusic.play();
 
         this.batch = new SpriteBatch();
         /*
@@ -170,32 +174,26 @@ public class GameManager extends Game implements IClearedLinesSubscriber {
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
         this.viewport = new FitViewport(1920, 1080, camera);
-        this.mainFont = new BitmapFont();
-        this.setScreen(new GameScreen(this));
+        this.setScreen(new GameMenuScreen(this));
 
-        this.gameboardRenderer = new GameboardRenderer(batch, viewport, this.gameboard, this.tetrisRenderAssets);
-        this.tetrominoRenderer = new TetrominoRenderer(batch, this.tetrisRenderAssets, this.tetrominoHolder, this.gameboardRenderer);
-        this.controlManager = new ControlManager(this.tetrominoHolder, this.tetrominoRenderer, this.gameArbiter);
+//        this.gameboardRenderer = new GameboardRenderer(batch, viewport, this.gameboard, this.tetrisRenderAssets);
+//        this.tetrominoRenderer = new TetrominoRenderer(batch, this.tetrisRenderAssets, this.tetrominoHolder, this.gameboardRenderer);
+//        this.controlManager = new ControlManager(this.tetrominoHolder, this.tetrominoRenderer, this.gameArbiter);
     }
     @Override
     public void render() {
         super.render();
-        this.manageGameSession();
+//        this.manageGameSession();
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        mainFont.dispose();
         easyLevelThemeMusic.dispose();
         hardLevelThemeMusic.dispose();
+
         if(this.assetManager != null){
             this.assetManager.dispose();
         }
-    }
-
-    @Override
-    public void onClearedLines() {
-
     }
 }

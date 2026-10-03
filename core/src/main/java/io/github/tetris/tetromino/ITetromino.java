@@ -15,5 +15,5 @@ public interface ITetromino {
     TetrominoOrientation getOrientation();
     TetrominoShape getShape();
     void rotateClockWise();
-
+    void rotateCounterClockWise();
 }
